@@ -2,6 +2,7 @@
 # to run this script open a terminal in the same folder and run the below two lines
 # chmod +x requirements.sh
 # ./requirements.sh
+
 # Step 1: Install nvm (Node Version Manager)
 echo "Installing nvm (Node Version Manager)..."
 if command -v curl &> /dev/null; then
@@ -49,4 +50,49 @@ else
   echo "http-server installation failed."
 fi
 
-echo "Node.js, npm, and http-server have been installed successfully."
+# Step 9: Install Homebrew (macOS only)
+if [[ "$OSTYPE" == "darwin"* ]]; then
+  echo "Installing Homebrew..."
+  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+  # Verify Homebrew installation
+  if command -v brew &> /dev/null; then
+    echo "Homebrew has been installed successfully."
+  else
+    echo "Homebrew installation failed."
+    exit 1
+  fi
+fi
+
+# Step 10: Install Python
+echo "Installing Python..."
+if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+  if command -v apt-get &> /dev/null; then
+    sudo apt-get update
+    sudo apt-get install -y python3 python3-pip
+  else
+    echo "apt-get not found. Please install Python manually."
+    exit 1
+  fi
+elif [[ "$OSTYPE" == "darwin"* ]]; then
+  if command -v brew &> /dev/null; then
+    brew install python
+  else
+    echo "Homebrew not found. Please install it from https://brew.sh/ and then re-run this script."
+    exit 1
+  fi
+else
+  echo "Unsupported OS. Please install Python manually."
+  exit 1
+fi
+
+# Step 11: Verify Python installation
+echo "Verifying Python installation..."
+if command -v python3 &> /dev/null; then
+  echo "Python has been installed successfully."
+  python3 --version
+else
+  echo "Python installation failed."
+fi
+
+echo "Node.js, npm, http-server, Homebrew (macOS), and Python have been installed successfully."
